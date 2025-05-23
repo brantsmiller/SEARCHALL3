@@ -35,30 +35,35 @@
   </div>
 
 <script>
+function esc(term){
+  /* Motion Array and NASA replace spaces with “+”. */
+  return encodeURIComponent(term).replace(/%20/g,'+');
+}
+
 const urls = q => [
-  // Adobe Stock video
-  `https://stock.adobe.com/search/video?k=${encodeURIComponent(q)}`,
+  /* Adobe Stock video */
+  `https://stock.adobe.com/search/video?k=${esc(q)}`,
 
-  // Motion Array stock video (new pattern: ?q=)
-  `https://motionarray.com/browse/stock-video/?q=${encodeURIComponent(q)}`,
+  /* Motion Array stock footage (needs ?q= pattern) */
+  `https://motionarray.com/browse/stock-video/?q=${esc(q)}`,
 
-  // Wikimedia Commons
-  `https://commons.wikimedia.org/w/index.php?search=${encodeURIComponent(q)}`,
+  /* Wikimedia Commons */
+  `https://commons.wikimedia.org/w/index.php?search=${esc(q)}`,
 
-  // NASA image and video library (new pattern)
-  `https://images.nasa.gov/search?q=${encodeURIComponent(q)}&page=1&media=image,video`
+  /* NASA images and video (full query string mirrors a manual search) */
+  `https://images.nasa.gov/search?q=${esc(q)}&page=1&media=image,video,audio&yearStart=1920&yearEnd=2025`
 ];
 
 function launch(){
   const term = document.getElementById('query').value.trim();
-  if (!term) return;
+  if(!term) return;
 
   urls(term).forEach(u=>{
-    const a = document.createElement('a');
-    a.href = u;
-    a.target = '_blank';
-    a.rel = 'noopener';
-    a.style.display = 'none';
+    const a=document.createElement('a');
+    a.href=u;
+    a.target='_blank';
+    a.rel='noopener';
+    a.style.display='none';
     document.body.appendChild(a);
     a.click();
     a.remove();
@@ -67,10 +72,11 @@ function launch(){
 
 document.getElementById('go').addEventListener('click', launch);
 document.getElementById('query').addEventListener('keydown', e=>{
-  if(e.key === 'Enter') launch();
+  if(e.key==='Enter') launch();
 });
 </script>
 </body>
 </html>
+
 
 
