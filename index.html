@@ -14,10 +14,7 @@
       justify-content: center;
       background: #f4f4f4;
     }
-    #searchBox{
-      display: flex;
-      gap: 0.5rem;
-    }
+    #searchBox{ display: flex; gap: 0.5rem; }
     input{
       font-size: 1.2rem;
       padding: 0.5rem 1rem;
@@ -39,18 +36,24 @@
 
 <script>
 const urls = q => [
+  // Adobe Stock video
   `https://stock.adobe.com/search/video?k=${encodeURIComponent(q)}`,
-  `https://motionarray.com/browse/stock-video?text=${encodeURIComponent(q)}`,
+
+  // Motion Array stock video (new pattern: ?q=)
+  `https://motionarray.com/browse/stock-video/?q=${encodeURIComponent(q)}`,
+
+  // Wikimedia Commons
   `https://commons.wikimedia.org/w/index.php?search=${encodeURIComponent(q)}`,
-  `https://images.nasa.gov/search-results?q=${encodeURIComponent(q)}&media=image,video`
+
+  // NASA image and video library (new pattern)
+  `https://images.nasa.gov/search?q=${encodeURIComponent(q)}&page=1&media=image,video`
 ];
 
-function launch() {
+function launch(){
   const term = document.getElementById('query').value.trim();
   if (!term) return;
 
-  // create, click, then remove invisible anchors so each tab is user-initiated
-  urls(term).forEach(u => {
+  urls(term).forEach(u=>{
     const a = document.createElement('a');
     a.href = u;
     a.target = '_blank';
@@ -63,10 +66,11 @@ function launch() {
 }
 
 document.getElementById('go').addEventListener('click', launch);
-document.getElementById('query').addEventListener('keydown', e => {
-  if (e.key === 'Enter') launch();
+document.getElementById('query').addEventListener('keydown', e=>{
+  if(e.key === 'Enter') launch();
 });
 </script>
 </body>
 </html>
+
 
