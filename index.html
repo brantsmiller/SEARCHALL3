@@ -14,53 +14,59 @@
       justify-content: center;
       background: #f4f4f4;
     }
-    #searchBox{ display: flex; gap: 0.5rem; }
+    #searchBox{ display:flex; gap:0.5rem; }
     input{
-      font-size: 1.2rem;
-      padding: 0.5rem 1rem;
-      width: 300px;
+      font-size:1.2rem;
+      padding:0.5rem 1rem;
+      width:300px;
     }
     button{
-      font-size: 1.2rem;
-      padding: 0.5rem 1rem;
-      cursor: pointer;
+      font-size:1.2rem;
+      padding:0.5rem 1rem;
+      cursor:pointer;
     }
   </style>
 </head>
 <body>
-  <h1>Stock Search Launcher</h1>
+  <h1>One-Click Multi Search</h1>
   <div id="searchBox">
     <input id="query" type="text" placeholder="Search term…" autofocus>
     <button id="go">Search</button>
   </div>
 
 <script>
-function esc(term){
-  /* Motion Array and NASA replace spaces with “+”. */
-  return encodeURIComponent(term).replace(/%20/g,'+');
+function esc(t){               // use + for spaces where these sites like it
+  return encodeURIComponent(t).replace(/%20/g,'+');
 }
 
-const urls = q => [
-  /* Adobe Stock video */
-  `https://stock.adobe.com/search/video?k=${esc(q)}`,
+const targets = q => [
+  // Adobe Stock video, AI excluded
+  `https://stock.adobe.com/search/video?filters%5Bcontent_type%3Aphoto%5D=0&filters%5Bcontent_type%3Aillustration%5D=0&filters%5Bcontent_type%3Azip_vector%5D=0&filters%5Bcontent_type%3Avideo%5D=1&filters%5Bcontent_type%3Atemplate%5D=0&filters%5Bcontent_type%3A3d%5D=0&filters%5Bcontent_type%3Aaudio%5D=0&filters%5Binclude_stock_enterprise%5D=0&filters%5Bis_editorial%5D=0&filters%5Bfree_collection%5D=0&filters%5Bcontent_type%3Aimage%5D=0&filters%5Bgentech%5D=exclude&order=relevance&search_type=filter-select&get_facets=1&k=${esc(q)}`,
 
-  /* Motion Array stock footage (needs ?q= pattern) */
-  `https://motionarray.com/browse/stock-video/?q=${esc(q)}`,
+  // Motion Array footage
+  `https://motionarray.com/browse/stock-video?text=${esc(q)}`,
 
-  /* Wikimedia Commons */
+  // Wikimedia Commons
   `https://commons.wikimedia.org/w/index.php?search=${esc(q)}`,
 
-  /* NASA images and video (full query string mirrors a manual search) */
-  `https://images.nasa.gov/search?q=${esc(q)}&page=1&media=image,video,audio&yearStart=1920&yearEnd=2025`
+  // NASA Images and Video Library
+  `https://images.nasa.gov/search?q=${esc(q)}&page=1&media=image,video`,
+
+  // Archive.org movies collection (most hits are video)
+  `https://archive.org/details/movies?query=${esc(q)}`,
+
+  // Canva free video library (browser view)
+  `https://www.canva.com/videos/free/?query=${esc(q)}`
 ];
 
 function launch(){
   const term = document.getElementById('query').value.trim();
   if(!term) return;
 
-  urls(term).forEach(u=>{
+  // invisible anchors keep Chrome happy without pop-up nags
+  targets(term).forEach(url=>{
     const a=document.createElement('a');
-    a.href=u;
+    a.href=url;
     a.target='_blank';
     a.rel='noopener';
     a.style.display='none';
@@ -77,6 +83,7 @@ document.getElementById('query').addEventListener('keydown', e=>{
 </script>
 </body>
 </html>
+
 
 
 
