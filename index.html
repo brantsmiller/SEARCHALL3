@@ -2,68 +2,57 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Multi-Site Stock Search</title>
+  <title>One-Click Multi Search</title>
   <style>
     body{
       font-family: Arial, Helvetica, sans-serif;
-      margin: 0;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: #f4f4f4;
+      margin:0;
+      height:100vh;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      background:#f4f4f4;
     }
-    #searchBox{ display:flex; gap:0.5rem; }
-    input{
-      font-size:1.2rem;
-      padding:0.5rem 1rem;
-      width:300px;
-    }
-    button{
-      font-size:1.2rem;
-      padding:0.5rem 1rem;
-      cursor:pointer;
-    }
+    #box{display:flex;gap:0.5rem}
+    input{font-size:1.2rem;padding:0.5rem 1rem;width:300px}
+    button{font-size:1.2rem;padding:0.5rem 1rem;cursor:pointer}
   </style>
 </head>
 <body>
-  <h1>One-Click Multi Search</h1>
-  <div id="searchBox">
-    <input id="query" type="text" placeholder="Search term…" autofocus>
+  <h1>Multi-Site Stock Search</h1>
+  <div id="box">
+    <input id="q" placeholder="Search term…" autofocus>
     <button id="go">Search</button>
   </div>
 
 <script>
-function esc(t){               // use + for spaces where these sites like it
-  return encodeURIComponent(t).replace(/%20/g,'+');
-}
+function esc(t){return encodeURIComponent(t).replace(/%20/g,'+');}
 
-const targets = q => [
+const targets = term => [
   // Adobe Stock video, AI excluded
-  `https://stock.adobe.com/search/video?filters%5Bcontent_type%3Aphoto%5D=0&filters%5Bcontent_type%3Aillustration%5D=0&filters%5Bcontent_type%3Azip_vector%5D=0&filters%5Bcontent_type%3Avideo%5D=1&filters%5Bcontent_type%3Atemplate%5D=0&filters%5Bcontent_type%3A3d%5D=0&filters%5Bcontent_type%3Aaudio%5D=0&filters%5Binclude_stock_enterprise%5D=0&filters%5Bis_editorial%5D=0&filters%5Bfree_collection%5D=0&filters%5Bcontent_type%3Aimage%5D=0&filters%5Bgentech%5D=exclude&order=relevance&search_type=filter-select&get_facets=1&k=${esc(q)}`,
+  `https://stock.adobe.com/search/video?filters%5Bcontent_type%3Aphoto%5D=0&filters%5Bcontent_type%3Aillustration%5D=0&filters%5Bcontent_type%3Azip_vector%5D=0&filters%5Bcontent_type%3Avideo%5D=1&filters%5Bcontent_type%3Atemplate%5D=0&filters%5Bcontent_type%3A3d%5D=0&filters%5Bcontent_type%3Aaudio%5D=0&filters%5Binclude_stock_enterprise%5D=0&filters%5Bis_editorial%5D=0&filters%5Bfree_collection%5D=0&filters%5Bcontent_type%3Aimage%5D=0&filters%5Bgentech%5D=exclude&order=relevance&search_type=filter-select&get_facets=1&k=${esc(term)}`,
 
-  // Motion Array footage
-  `https://motionarray.com/browse/stock-video?text=${esc(q)}`,
+  // Motion Array – all categories
+  `https://motionarray.com/browse/?q=${esc(term)}`,
 
   // Wikimedia Commons
-  `https://commons.wikimedia.org/w/index.php?search=${esc(q)}`,
+  `https://commons.wikimedia.org/w/index.php?search=${esc(term)}`,
 
-  // NASA Images and Video Library
-  `https://images.nasa.gov/search?q=${esc(q)}&page=1&media=image,video`,
+  // NASA images & video
+  `https://images.nasa.gov/search?q=${esc(term)}&page=1&media=image,video`,
 
-  // Archive.org movies collection (most hits are video)
-  `https://archive.org/details/movies?query=${esc(q)}`,
+  // Internet Archive movies collection
+  `https://archive.org/details/movies?query=${esc(term)}`,
 
-  // Canva free video library (browser view)
-  `https://www.canva.com/videos/free/?query=${esc(q)}`
+  // Canva free clips (browser view)
+  `https://www.canva.com/videos/free/?query=${esc(term)}`
 ];
 
 function launch(){
-  const term = document.getElementById('query').value.trim();
+  const term=document.getElementById('q').value.trim();
   if(!term) return;
 
-  // invisible anchors keep Chrome happy without pop-up nags
   targets(term).forEach(url=>{
     const a=document.createElement('a');
     a.href=url;
@@ -76,13 +65,14 @@ function launch(){
   });
 }
 
-document.getElementById('go').addEventListener('click', launch);
-document.getElementById('query').addEventListener('keydown', e=>{
-  if(e.key==='Enter') launch();
+document.getElementById('go').addEventListener('click',launch);
+document.getElementById('q').addEventListener('keydown',e=>{
+  if(e.key==='Enter')launch();
 });
 </script>
 </body>
 </html>
+
 
 
 
