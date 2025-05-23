@@ -5,28 +5,28 @@
   <title>Multi-Site Stock Search</title>
   <style>
     body{
-      font-family:Arial,Helvetica,sans-serif;
-      margin:0;
-      height:100vh;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:center;
-      background:#f4f4f4;
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #f4f4f4;
     }
     #searchBox{
-      display:flex;
-      gap:0.5rem;
+      display: flex;
+      gap: 0.5rem;
     }
     input{
-      font-size:1.2rem;
-      padding:0.5rem 1rem;
-      width:300px;
+      font-size: 1.2rem;
+      padding: 0.5rem 1rem;
+      width: 300px;
     }
     button{
-      font-size:1.2rem;
-      padding:0.5rem 1rem;
-      cursor:pointer;
+      font-size: 1.2rem;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -38,19 +38,28 @@
   </div>
 
 <script>
-/* Build the four target URLs.
-   Adjust any pattern later if a service changes its query string. */
-const targets = [
-  q => `https://stock.adobe.com/search/video?k=${encodeURIComponent(q)}`,        // Adobe Stock videos :contentReference[oaicite:0]{index=0}
-  q => `https://motionarray.com/browse/stock-video?text=${encodeURIComponent(q)}`, // Motion Array (works today, but MA occasionally tweaks its path)
-  q => `https://commons.wikimedia.org/w/index.php?search=${encodeURIComponent(q)}`, // Wikimedia Commons :contentReference[oaicite:1]{index=1}
-  q => `https://images.nasa.gov/search-results?q=${encodeURIComponent(q)}&media=image,video` // NASA Images & Video
+const urls = q => [
+  `https://stock.adobe.com/search/video?k=${encodeURIComponent(q)}`,
+  `https://motionarray.com/browse/stock-video?text=${encodeURIComponent(q)}`,
+  `https://commons.wikimedia.org/w/index.php?search=${encodeURIComponent(q)}`,
+  `https://images.nasa.gov/search-results?q=${encodeURIComponent(q)}&media=image,video`
 ];
 
 function launch() {
-  const q = document.getElementById('query').value.trim();
-  if (!q) return;
-  targets.forEach(t => window.open(t(q), '_blank'));
+  const term = document.getElementById('query').value.trim();
+  if (!term) return;
+
+  // create, click, then remove invisible anchors so each tab is user-initiated
+  urls(term).forEach(u => {
+    const a = document.createElement('a');
+    a.href = u;
+    a.target = '_blank';
+    a.rel = 'noopener';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  });
 }
 
 document.getElementById('go').addEventListener('click', launch);
@@ -60,3 +69,4 @@ document.getElementById('query').addEventListener('keydown', e => {
 </script>
 </body>
 </html>
+
